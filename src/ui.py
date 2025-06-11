@@ -1,28 +1,28 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from src.bot import run_bot  # Importing the bot logic from your existing bot module
+
+from src.browser import focus_chrome_window
+from src.utils import show_fading_popup_with_sound
 
 
-# Function to start the bot with the user-provided URL
 def start_bot():
     """Starts the bot when the button is clicked."""
     url = url_entry.get()  # Get the value from the entry widget
-    if not url.strip():  # Check if URL is empty
-        messagebox.showwarning("Input Error", "Please enter a valid URL.")
+    # Check and focus on running Chrome browser, or show an alert if not found
+    if focus_chrome_window():
+        show_fading_popup_with_sound(title="Browser Found", message="Focusing on the open Chrome browser.")
+
+    else:
+        show_fading_popup_with_sound(title="Browser Not Found", message="No open Chrome browser found. Please open Chrome manually.")
         return
 
     try:
-        log_text.set("Starting the bot...")
         root.update_idletasks()  # Update the UI before running the bot
 
-        # Passing the URL to your run_bot implementation
-        run_bot(url)
-
-        log_text.set("Bot completed successfully!")
         messagebox.showinfo("Success", "Bot has finished running successfully!")
     except Exception as e:
-        log_text.set(f"Error: {e}")
         messagebox.showerror("Error", f"An error occurred while running the bot:\n{e}")
+
 
 
 # Function to create and display the Tkinter-based user interface
