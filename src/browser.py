@@ -1,26 +1,14 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+import pygetwindow as gw  # Dependency to interact with open windows
 
-
-def create_browser():
-    """Set up and return a Selenium WebDriver instance."""
-    # Configure browser options
-    chrome_options = Options()
-    chrome_options.add_argument("--start-maximized")  # Start browser maximized
-    chrome_options.add_argument("--disable-infobars")  # Disable infobars
-    chrome_options.add_argument("--disable-extensions")  # Disable extensions
-    chrome_options.add_argument("--headless")  # Run in headless mode (optional, for testing/scripted runs)
-
-    # Set up WebDriver using WebDriver Manager
-    service = Service(ChromeDriverManager().install())
-    browser = webdriver.Chrome(service=service, options=chrome_options)
-
-    return browser
+def focus_chrome_window():
+    chrome_windows = [win for win in gw.getWindowsWithTitle("Chrome") if "Chrome" in win.title]
+    if chrome_windows:
+        chrome_windows[0].activate()  # Activate (focus on) the Chrome window
+        return True
+    return False
 
 
 def close_browser(browser):
-    """Gracefully close the browser."""
+    """Gracefully close the WebDriver instance."""
     if browser:
         browser.quit()
